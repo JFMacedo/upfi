@@ -33,9 +33,11 @@ export default function Home(): JSX.Element {
   );
 
   const formattedData = useMemo(() => {
-    const formatted = data?.pages.flatMap(imagesData => {
-      return imagesData.data.flat()
-    })
+    const formatted = data?.pages.map(imageData => {
+      return imageData.data
+    }).flat()
+  
+    return formatted
   }, [data]);
 
   if(isLoading && !isError) {
