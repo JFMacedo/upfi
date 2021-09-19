@@ -59,7 +59,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
   const queryClient = useQueryClient();
   const mutation = useMutation(
     async (image: NewImageData) => {
-      await api.post('api/image', {
+      await api.post('api/images', {
         ...image,
         url: imageUrl
       })
@@ -92,6 +92,7 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
       }
       await mutation.mutateAsync(data)
       toast({
+        status: 'success',
         title: 'Imagem cadastrada',
         description: 'Sua imagem foi cadastrada com sucesso.'
       })
