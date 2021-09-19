@@ -8,14 +8,26 @@ import { api } from '../services/api';
 import { Loading } from '../components/Loading';
 import { Error } from '../components/Error';
 
+interface Image {
+  title: string;
+  description: string;
+  url: string;
+  ts: number;
+  id: string;
+}
+
+interface GetImagesResponse {
+  after: string;
+  data: Image[];
+}
+
 export default function Home(): JSX.Element {
-  async function fetchImages({ pageParam = null }) {
+  async function fetchImages({ pageParam = null }): Promise<GetImagesResponse> {
     const { data } = await api.get('api/images', {
       params: {
         after: pageParam
       }
     })
-    
     return data
   }
 
@@ -29,7 +41,7 @@ export default function Home(): JSX.Element {
   } = useInfiniteQuery(
     'images',
     fetchImages,
-    { getNextPageParam: (lastPage, pages) => lastPage.after }
+    { getNextPageParam: lastPage => lastPage?.after || null }
   );
 
   const formattedData = useMemo(() => {
@@ -44,7 +56,7 @@ export default function Home(): JSX.Element {
     return <Loading />
   }
 
-  if(isLoading && isError) {
+  if(!isLoading && isError) {
     return <Error />
   }
 
